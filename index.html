@@ -729,9 +729,18 @@
       const infoPanelContent = document.getElementById('infoPanelContent');
 
       // === LOAD DATA ===
+      function fetchGeoJSON(url) {
+        return fetch(url).then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status} saat memuat ${url}`);
+          }
+          return response.json();
+        });
+      }
+
       Promise.all([
-        fetch('data/desa_sumba.geojson').then(r => r.json()),
-        fetch('data/titik_air.geojson').then(r => r.json())
+        fetchGeoJSON('Data/desa_sumba.geojson'),
+        fetchGeoJSON('Data/titik_air.geojson')
       ]).then(([desaData, airData]) => {
         // Stats
         const pcts = desaData.features.map(f => f.properties.pct_air).filter(v => v !== null && v !== undefined);
